@@ -1,0 +1,53 @@
+
+
+pract 01 
+ dhcp install 
+
+sudo apt update
+sudo apt install isc-dhcp-server -y
+
+sudo nano /etc/dhcp/dhcpd.conf
+
+# Global settings
+default-lease-time 600;
+max-lease-time 7200;
+authoritative;
+
+# Define your subnet
+subnet 192.168.1.0 netmask 255.255.255.0 {
+  range 192.168.1.100 192.168.1.200;
+  option routers 192.168.1.1;
+  option subnet-mask 255.255.255.0;
+  option domain-name-servers 8.8.8.8, 8.8.4.4;
+  option domain-name "example.local";
+}
+
+
+sudo nano /etc/default/isc-dhcp-server
+
+INTERFACESv4="eth0"
+
+ip link show
+
+sudo systemctl restart isc-dhcp-server
+
+
+sudo systemctl enable isc-dhcp-server
+
+sudo systemctl enable isc-dhcp-server
+
+sudo systemctl status isc-dhcp-server
+
+
+cat /var/lib/dhcp/dhcpd.leases
+
+host staticclient {
+  hardware ethernet 00:11:22:33:44:55;
+  fixed-address 192.168.1.50;
+}
+
+
+sudo tail -f /var/log/syslog
+
+
+

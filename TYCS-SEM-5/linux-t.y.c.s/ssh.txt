@@ -1,0 +1,16 @@
+step 1 - sudo apt update
+step2 - sudo apt install openssh-server
+step 3- sudo systemctl enable ufw
+step4 - sudo systemctl status ssh
+step5 -sudo adduser tycs
+step6- exit
+step7 - cd /etc
+           sudo chmod 777 sudoers
+           nano sudoers
+#Giving a root permission to Sudoers file.
+tycs ALL=(ALL:ALL) ALL
+step 8-suo ufw allow 22/udp
+step9-ssh -l tycs 172.16.0.42 //server ip address
+client side
+open cmd
+ssh -l tycs 172.16.0.42

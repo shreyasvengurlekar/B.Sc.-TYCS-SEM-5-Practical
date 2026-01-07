@@ -1,0 +1,67 @@
+PRACTICAL NO.10
+
+
+
+
+Serach windows defender firewall
+ 
+Click on advanced setting
+ 
+Click on outbound rule
+ 
+Click on new rule
+ 
+Search on chrome
+ 
+Select program and click on next
+ 
+Brown chrome file
+Program files > google  > chrome  >  application > chrome .exe 
+ 
+Click on next
+ 
+Block the connection
+ 
+ 
+Write name and click on finish
+ 
+Rules is created
+ 
+#google site blocked
+ 
+Disable again
+ 
+Now it display again
+ 
+#block port number
+Create new rule
+ 
+Select port 
+ 
+Click on tcp and write port 80,443
+
+ 
+ 
+ 
+ 
+https service blocked
+ 
+#custom rule   >  blocked  website
+Initially its working proper
+ 
+Search ip address for chatgpt 
+nslookup www.chatgpt.com
+ 
+New rule
+ 
+Click on custom
+ 
+Select protocol type 
+ 
+Add addresses
+ 
+Add all ip
+ 
+Write name 
+ 
+#website is blocked

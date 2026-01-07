@@ -1,0 +1,66 @@
+     pract 07 
+ldap 
+Configure Lddap Server, Configure Ldap Server In Order To 
+Share Users’ Accounts In Your Local Networks, Add Ldap User
+ Accounts In The Networks. 
+Install Phpldapadmin To Operate Ldap Server Via Web Browse
+
+
+
+sudo apt update
+sudo apt install slapd ldap-utils -y
+
+
+sudo dpkg-reconfigure slapd
+
+
+ldapsearch -x -LLL -H ldap:/// -b dc=example,dc=com dn
+
+nano ldap-user.ldif
+
+dn: uid=john,ou=People,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: John Doe
+sn: Doe
+uid: john
+uidNumber: 10000
+gidNumber: 10000
+homeDirectory: /home/john
+loginShell: /bin/bash
+userPassword: {SSHA}hashed_password_here
+
+slappasswd
+
+ldapadd -x -D cn=admin,dc=example,dc=com -W -f ldap-user.ldif
+
+
+dn: ou=People,dc=example,dc=com
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Groups,dc=example,dc=com
+objectClass: organizationalUnit
+ou: Groups
+
+ldapadd -x -D cn=admin,dc=example,dc=com -W -f base.ldif
+
+sudo apt install phpldapadmin -y
+
+sudo nano /etc/phpldapadmin/config.php
+
+$servers->setValue('login','bind_id','cn=admin,dc=example,dc=com');
+
+
+
+sudo systemctl restart apache2
+
+http://<server-ip>/phpldapadmin
+
+sudo apt install libnss-ldap libpam-ldap ldap-utils nscd
+
+sudo systemctl restart nscd
+
+getent passwd john
+

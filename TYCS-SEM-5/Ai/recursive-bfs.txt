@@ -1,0 +1,78 @@
+from heapq import heappush, heappop
+
+# Graph (Adjacency List)
+map_graph = {
+    'Devgad': ['Vaibhavwadi', 'Kankavli'],
+    'Vaibhavwadi': ['Devgad', 'Kankavli'],
+    'Kankavli': ['Devgad', 'Vaibhavwadi', 'Kudal', 'Malvan'],
+    'Kudal': ['Vengurla', 'Kankavli', 'Malvan', 'Sawantwadi'],
+    'Malvan': ['Kankavli', 'Kudal', 'Vengurla'],
+    'Vengurla': ['Kudal', 'Malvan', 'Sawantwadi'],
+    'Sawantwadi': ['Kudal', 'Vengurla', 'Dodamarg'],
+    'Dodamarg': ['Sawantwadi']
+}
+
+# Distances (undirected edges)
+distances = {
+    ('Devgad', 'Vaibhavwadi'): 35, ('Devgad', 'Kankavli'): 50,
+    ('Vaibhavwadi', 'Kankavli'): 25, ('Kankavli', 'Kudal'): 30,
+    ('Kankavli', 'Malvan'): 40, ('Kudal', 'Malvan'): 20,
+    ('Kudal', 'Sawantwadi'): 28, ('Malvan', 'Vengurla'): 50,
+    ('Kudal', 'Vengurla'): 22, ('Vengurla', 'Sawantwadi'): 30,
+    ('Sawantwadi', 'Dodamarg'): 26
+}
+
+# Function to get distance between nodes
+def get_distance(n1, n2):
+    return distances.get((n1, n2)) or distances.get((n2, n1)) or float('inf')
+
+# UCS / A* (without heuristic)
+def a_star(start, goal):
+    open_set = [(0, 0, start, [start])]
+    visited = set()
+
+    while open_set:
+        est, cost, current, path = heappop(open_set)
+
+        if current == goal:
+            return path, cost
+
+        if current in visited:
+            continue
+        visited.add(current)
+
+        for nbr in map_graph.get(current, []):
+            if nbr not in visited:
+                new_cost = cost + get_distance(current, nbr)
+                # est = new_cost + heuristic[nbr]  <-- if you add heuristics
+                heappush(open_set, (new_cost, new_cost, nbr, path + [nbr]))
+
+    return None, float('inf')
+
+
+# Normalize user input (case-insensitive)
+def normalize_input(user_input):
+    user_input = user_input.strip().lower()
+    for node in map_graph.keys():
+        if node.lower() == user_input:
+            return node
+    return None
+
+
+# User input
+start_raw = input("Current node: ")
+goal_raw = input("Goal node: ")
+
+start = normalize_input(start_raw)
+goal = normalize_input(goal_raw)
+
+if not start or not goal:
+    print("Invalid start or goal node entered.")
+else:
+    path, cost = a_star(start, goal)
+    if path:
+        print(f"\nGoal reached: {goal}")
+        print(f"Shortest path: {' -> '.join(path)}")
+        print(f"Distance: {cost} km")
+    else:
+        print("No path found.")

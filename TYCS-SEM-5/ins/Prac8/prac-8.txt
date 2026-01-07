@@ -1,0 +1,141 @@
+PRACTICAL 8  
+
+
+#take two PCs , three routers , two switches and one server 
+Connect router to each other using serial DTE cable ,and another connection using automatic cable
+ 
+#Assign IP to PC 1 
+IP  :  192.168.1.4 
+Default Gateway  :  192.168.1.1
+ 
+#Assign IP to PC 2 
+IP  :  192.168.4.4
+Default Gateway  :  192.168.4.1
+ 
+#Click on router 1 (left)   > Open CLI
+ Int gigabitEthernet 0/0
+Ip address 192.168.1.1 255.255.255.0 
+No shut
+Int sesrial0/1/0
+Ip address 192.168.2.1 255.255.255.0
+No shut
+ 
+#Click on router 0 (top)   > Open CLI
+Int serial0/1/0
+Ip address 192.168.2.2 255.255.255.0
+No shut
+Exit
+Int serial0/1/1
+Ip address 192.168.3.1 255.255.255.0
+No shut
+ 
+#Click on router 2 (right)   > Open CLI
+Int serial0/1/0
+Ip address 192.168.3.2 255.255.255.0
+No shut
+ 
+Exit
+Int gigabitEthernet 0/0
+Ip address 192.168.4.1 255.255.255.0
+No shut
+ 
+#Click on Router 1 (Left) 
+Router rip
+Netw 192.168.1.0
+Netw 192.168.2.0
+Exit (2 times))
+ 
+Show Ip route
+ 
+#Click on router 0 (top)
+Router rip 
+Netw 192.168.2.0
+Netw 192.168.3.0
+ 
+Show ip route
+ 
+#Click on Router R2 (right)
+Router rip
+Netw 192.168.3.0
+Netw 192.168.4.0
+ 
+Show ip route
+ 
+#Open server 
+Ip config   >   assign IP to it
+IP  :  192.168.1.50  
+Default gateway  :  192.168.1.1 
+ 
+#Make sure HTTP and HTTPs service on of server
+ 
+#Ping pc 1 to pc 2 (pc 1 can communicate with pc 2)
+ 
+#Ping from pc 2 to pc 1(pc 2 can communicate with pc 1)
+ 
+#Apply security
+#Open router 1 (left)
+Show version
+On config mode 
+License boot module c1900 technology-package securityk9
+Exit
+Copy run startup-config
+Reload
+ 
+ 
+#Open Router R1 (left)
+Mkdir ipdir
+Conf t
+Ip ips config location ipdir 
+Ip ips name iosips
+Ip ips signauture-category
+ 
+Just write “ ? “ (if not understand anything )
+ 
+Category all
+Retired true
+ 
+Exit
+Category  ?
+ 
+Category ios_ips 
+ 
+Retired false
+ 
+Category ios_ips basic
+ 
+exit
+ 
+Interface gigabitEthernet 0/0
+Ip ips iosips out
+ 
+ 
+Exit
+Logging host 192.168.1.50
+Service timestamps log datetime msec
+ 
+Ip ips signature-definition
+ 
+Signature 2004 0
+ 
+Just write “ ? “
+status
+ 
+ 
+Retired false
+Enable true
+exit
+ 
+Engine
+Event action deny-packet-inline
+exit
+ 
+Do show ip ips all
+ 
+Ping from pc 1 to pc 2 – (pc1  can communicate with pc2)
+ 
+
+Ping from pc 2 to pc 1 – (pc2  can not  communicate with pc1)
+ 
+Check  server syslog 
+ 
+
