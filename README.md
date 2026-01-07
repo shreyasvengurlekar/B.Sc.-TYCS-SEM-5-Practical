@@ -103,6 +103,14 @@ Direct copying for exams or submissions is **not recommended**.
 ✔ Acts as a **reference repository**
 
 ---
+## 🎯 Who Can Use This Repository?
+- TYCS Semester 5 students
+- Students preparing for practical examinations
+- Juniors looking for reference material
+- Learners interested in core CS subjects
+
+---
+
 
 ## 🤝 Contributions
 Suggestions and improvements are always welcome!  
