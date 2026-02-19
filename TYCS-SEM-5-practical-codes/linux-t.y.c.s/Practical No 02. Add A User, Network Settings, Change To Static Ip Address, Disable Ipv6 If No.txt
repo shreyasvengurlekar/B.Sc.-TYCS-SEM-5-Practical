@@ -1,0 +1,63 @@
+
+pract 02
+Initial Settings: Add A User, Network Settings, 
+Change To Static Ip Address, Disable Ipv6 If Not Needed, 
+Configure Service, Display The List Of Services Which Are 
+Running. Stop And Turn Off Auto-Start Setting
+ For A Service If You Don’t Need It, Sudo Settings
+
+sudo adduser john
+
+sudo usermod -aG sudo john
+
+ip a
+
+sudo nano /etc/netplan/01-netcfg.yaml
+
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      dhcp4: no
+      addresses: [192.168.1.100/24]
+      gateway4: 192.168.1.1
+      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]
+
+
+sudo netplan apply
+
+ip a
+
+
+sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
+sudo nano /etc/sysctl.conf
+
+
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+
+sudo sysctl -p
+
+systemctl list-units --type=service --state=running
+
+
+systemctl list-unit-files --type=service | grep enabled
+
+
+sudo systemctl stop apache2
+sudo systemctl disable apache2
+
+sudo systemctl mask apache2
+
+sudo visudo
+
+john ALL=(ALL) NOPASSWD:ALL
+
+
+
+

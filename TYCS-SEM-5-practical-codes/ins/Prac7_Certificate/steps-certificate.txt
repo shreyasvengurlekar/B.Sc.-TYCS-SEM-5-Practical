@@ -1,0 +1,51 @@
+
+1. donwload & install Git 
+
+2. In windows search for xampp folder ,
+	xampp --> apache --> crt (if not then create)
+	
+3. right click on crt and open in Git Bash
+	
+	type following commands 1 by one 
+	
+	openssl genrsa -out TYCS.key 2048
+	openssl req -new -key TYCS.key -out TYCS.csr
+	openssl x509 -req -days 365 -in TYCS.csr -signkey TYCS.key -out TYCS.crt
+	
+4. 3 files will be created in crt folder 
+
+5. press Windows + R  and type mmc 
+
+6. click on file (top left) & click - Add or remove 
+
+7. click on certificates & after click Add> button 
+
+8. select computer account and click next
+
+9. click finish
+
+10.  click ok
+
+11. click certificates (left side) 
+	--> Trusted Root --> (Right click) All tasks 
+	--> import 
+	
+12. click next
+
+13. clcik browse & give path of certificate
+
+14. click next 
+
+15. click finish
+
+16. click ok
+
+
+
+
+<!DOCTYPE html>
+<body>
+    <h1>Shreyas</h1>
+    <p>This is a sample HTML file named shreyas.html.</p>
+</body>
+</html>

@@ -1,0 +1,32 @@
+step1-sudo apt update
+step2-sudo apt install samba -y
+step 3-sudo systemctl start smbd
+step4-sudo systemctl status smbd
+step5-cd /srv
+        ls
+sudo mkdir samba
+cd samba
+step6-ls 
+ls -l
+step7- Make a new directory in /srv/samba
+sudo mkdir share_AR
+ls
+step8-sudo chmod 777 share_AR
+ls -l
+step 9-smb.conf
+sudo nano /etc/samba/smb.conf
+[share_AR]
+	path = /srv/samba/share_AR
+	browsable = yes
+	read only = no
+	guest ok = yes
+	force user = nobody
+step10 - sudo systemctl restart smbd
+step11 - ip a
+step12- Allow Firewall and reload firewall
+	sudo ufw allow 139/tcp
+	sudo ufw allow 445/tcp
+	sudo ufw allow 138/tcp
+	sudo ufw reload
+step13- Access folder from server to windows client
+\\172.16.0.42

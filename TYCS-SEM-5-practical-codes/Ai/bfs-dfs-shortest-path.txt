@@ -1,0 +1,66 @@
+from collections import deque
+
+# state map
+state_map = {
+    'Devgad': ['Vaibhavwadi', 'Kankavli'],
+    'Vaibhavwadi': ['Devgad', 'Kankavli'],
+    'Kankavli': ['Devgad', 'Vaibhavwadi', 'Kudal', 'Malvan'],
+    'Kudal': ['Kankavli', 'Malvan', 'Sawantwadi'],
+    'Malvan': ['Kankavli', 'Kudal', 'Vengurla'],
+    'Vengurla': ['Malvan', 'Sawantwadi'],
+    'Sawantwadi': ['Kudal', 'Vengurla', 'Dodamarg'],
+    'Dodamarg': ['Sawantwadi']
+}
+
+
+# All paths using DFS
+def all_paths(g, src, dst, path=[]):
+    path = path + [src]
+
+    if src == dst:
+        return [path]
+    if src not in g:
+        return []
+
+    paths = []
+    for node in g[src]:
+        if node not in path:
+            paths.extend(all_paths(g, node, dst, path))
+    return paths
+
+
+# Shortest path using BFS
+def shortest_path(g, src, dst):
+    queue = deque([[src]])
+    visited = set()
+
+    while queue:
+        path = queue.popleft()
+        node = path[-1]
+
+        if node == dst:
+            return path
+
+        if node not in visited:
+            visited.add(node)
+            for n in g[node]:
+                if n not in path:
+                    queue.append(path + [n])
+    return None
+
+
+# Input
+source = input("Source: ").title()
+destination = input("Destination: ").title()
+
+if source not in state_map or destination not in state_map:
+    print("Invalid state name.")
+else:
+    print("\nAll paths:")
+    for i, p in enumerate(all_paths(state_map, source, destination), 1):
+        print(f"{i}) {' -> '.join(p)}")
+
+    sp = shortest_path(state_map, source, destination)
+    print("\nBest (shortest) path: ")
+    print(" -> ".join(sp) if sp else "No path found.")
+

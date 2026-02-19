@@ -1,0 +1,65 @@
+
+            pract 6 
+dhcp  server 
+
+
+sudo apt update
+sudo apt install isc-dhcp-server -y
+
+
+sudo nano /etc/default/isc-dhcp-server
+
+INTERFACESv4="eth0"
+
+sudo nano /etc/dhcp/dhcpd.conf
+
+default-lease-time 600;
+max-lease-time 7200;
+authoritative;
+
+subnet 192.168.1.0 netmask 255.255.255.0 {
+  range 192.168.1.100 192.168.1.200;
+  option routers 192.168.1.1;
+  option subnet-mask 255.255.255.0;
+  option domain-name-servers 8.8.8.8, 1.1.1.1;
+}
+
+
+sudo systemctl restart isc-dhcp-server
+sudo systemctl enable isc-dhcp-server
+
+sudo systemctl status isc-dhcp-server
+
+sudo apt update
+sudo apt install nfs-kernel-server -y
+
+
+sudo mkdir -p /srv/nfs/shared
+sudo chown nobody:nogroup /srv/nfs/shared
+
+
+sudo nano /etc/exports
+
+/srv/nfs/shared 192.168.1.0/24(rw,sync,no_subtree_check)
+
+
+sudo exportfs -ra
+
+sudo exportfs -v
+
+sudo systemctl restart nfs-kernel-server
+sudo systemctl enable nfs-kernel-server
+
+sudo apt install nfs-common -y
+
+sudo mount <server-ip>:/srv/nfs/shared /mnt
+
+sudo mount 192.168.1.10:/srv/nfs/shared /mnt
+
+192.168.1.10:/srv/nfs/shared /mnt nfs defaults 0 0
+
+mount \\<server-ip>\srv\nfs\shared Z:
+
+mount \\192.168.1.10\srv\nfs\shared Z:
+
+

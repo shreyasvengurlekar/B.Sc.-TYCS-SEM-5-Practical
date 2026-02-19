@@ -1,0 +1,76 @@
+  ptact 08 
+nis server 
+
+
+
+sudo apt update
+sudo apt install nis rpcbind -y
+
+sudo ypdomainname examplenis
+
+
+echo "examplenis" | sudo tee /etc/defaultdomain
+
+
+sudo nano /etc/default/nis
+
+NISDOMAIN=examplenis
+YPBINDARGS=""
+YPSET=yes
+
+
+sudo nano /etc/yp.conf
+
+domain examplenis server <server-ip>
+
+
+sudo nano /etc/ypserv.securenets
+
+255.255.255.0     192.168.1.0
+
+MERGE_PASSWD=true    >   MINGID=100
+MERGE_GROUP=true    >    MINUID=1000
+
+sudo /usr/lib/yp/ypinit -m
+
+
+sudo systemctl enable rpcbind nis
+sudo systemctl start rpcbind nis
+
+sudo systemctl status nis
+
+
+sudo apt install nis rpcbind -y
+
+sudo ypdomainname examplenis
+echo "examplenis" | sudo tee /etc/defaultdomain
+
+sudo nano /etc/yp.conf
+
+domain examplenis server <nis-server-ip>
+
+
+passwd:         files nis
+group:          files nis
+shadow:         files nis
+
+sudo systemctl enable rpcbind
+sudo systemctl start rpcbind
+
+sudo systemctl enable ypbind
+sudo systemctl start ypbind
+
+
+ypwhich
+
+su - <nis-user>
+
+getent passwd <nis-user>
+
+getent passwd <nis-user>
+su - <nis-user>
+
+
+
+
+

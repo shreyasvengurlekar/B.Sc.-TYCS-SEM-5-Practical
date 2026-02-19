@@ -1,0 +1,99 @@
+1. Update Your System
+sudo apt update && sudo apt upgrade -y
+
+✅ 2. Install MySQL Server
+sudo apt install mysql-server -y
+
+🔐 Secure MySQL Installation
+sudo mysql_secure_installation
+
+✅ 3. Check MySQL Status
+sudo systemctl status mysql
+
+
+To enable MySQL on boot:
+
+sudo systemctl enable mysql
+
+✅ 4. Login to MySQL (Optional Test)
+sudo mysql -u root -p
+
+
+You’ll be prompted for the password you just set.
+
+✅ 5. Install phpMyAdmin
+sudo apt install phpmyadmin -y
+
+✅ 6. Enable phpMyAdmin in Apache
+
+If phpMyAdmin is not accessible yet, link it manually:
+
+sudo ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf-available/phpmyadmin.conf
+sudo a2enconf phpmyadmin
+sudo systemctl reload apache2
+
+✅ 7. Access phpMyAdmin
+
+Open your browser and go to:
+
+http://<your_server_ip>/phpmyadmin
+
+
+Log in with:
+
+Username: root (or MySQL user you created)
+
+Password: Your MySQL root password
+
+Open MySQL:
+
+sudo mysql
+
+
+Run:
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_password';
+FLUSH PRIVILEGES;
+EXIT;
+
+
+Replace 'your_password' with your actual root password.
+
+✅ 9. Secure phpMyAdmin (Optional but Recommended)
+🔒 Use .htaccess (basic auth)
+sudo nano /etc/phpmyadmin/apache.conf
+
+
+Add this line inside the <Directory /usr/share/phpmyadmin> block:
+
+AllowOverride All
+
+
+Then create .htaccess:
+
+sudo nano /usr/share/phpmyadmin/.htaccess
+
+
+Paste:
+
+AuthType Basic
+AuthName "Restricted Access"
+AuthUserFile /etc/phpmyadmin/.htpasswd
+Require valid-user
+
+
+Create a user and password for login:
+
+sudo apt install apache2-utils
+sudo htpasswd -c /etc/phpmyadmin/.htpasswd youruser
+
+
+Restart Apache:
+
+sudo systemctl restart apache2
+
+✅ 10. (Optional) Allow External Access to phpMyAdmin
+
+If accessing from a remote client, allow Apache through the firewall:
+
+sudo ufw allow in "Apache Full"

@@ -1,0 +1,108 @@
+
+Practical No 05.
+Install DNS Server Bind, Configure DNS Server Which 
+Resolves Domain Name Or IP Address, Install Bind 9, Configure Bind, Limit Ranges You Allow To Access If Needed.
+
+
+
+sudo apt update
+sudo apt install bind9 bind9utils bind9-doc dnsutils -y
+
+
+sudo nano /etc/bind/named.conf.options
+
+options {
+    directory "/var/cache/bind";
+
+    recursion yes;
+    allow-query { any; };  # Change to your IP ranges if restricting access
+
+    forwarders {
+        8.8.8.8;
+        1.1.1.1;
+    };
+
+    dnssec-validation auto;
+
+    listen-on port 53 { any; };
+    allow-recursion { localhost; 192.168.1.0/24; };  # Restrict if needed
+};
+
+
+sudo nano /etc/bind/named.conf.local
+
+zone "example.com" {
+    type master;
+    file "/etc/bind/zones/db.example.com";
+};
+
+zone "1.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/zones/db.192";
+};
+
+
+sudo mkdir /etc/bind/zones
+
+sudo nano /etc/bind/zones/db.example.com
+
+$TTL 604800
+@       IN      SOA     ns1.example.com. admin.example.com. (
+                              3         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+
+; Name servers
+@       IN      NS      ns1.example.com.
+
+; A records
+ns1     IN      A       192.168.1.10
+www     IN      A       192.168.1.10
+
+
+sudo nano /etc/bind/zones/db.192
+
+$TTL 604800
+@       IN      SOA     ns1.example.com. admin.example.com. (
+                              3         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+
+; Name servers
+@       IN      NS      ns1.example.com.
+
+; PTR records
+10      IN      PTR     ns1.example.com.
+10      IN      PTR     www.example.com.
+
+
+sudo named-checkconf
+sudo named-checkzone example.com /etc/bind/zones/db.example.com
+sudo named-checkzone 1.168.192.in-addr.arpa /etc/bind/zones/db.192
+
+
+sudo systemctl restart bind9
+sudo systemctl enable bind9
+
+dig @localhost example.com
+dig @localhost www.example.com
+
+
+dig -x 192.168.1.10 @localhost
+
+allow-query { 127.0.0.1; 192.168.1.0/24; };   # Only allow local subnet
+allow-recursion { 127.0.0.1; 192.168.1.0/24; };
+
+
+sudo systemctl reload bind9
+
+sudo ufw allow 53
+
+sudo ufw allow 53/tcp
+sudo ufw allow 53/udp
+
+
